@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2026 曼徹斯特‧倫敦親子學術旅遊計畫</title>
+<style>
+  :root {
+    --navy: #1B3A6B;
+    --teal: #2A7F7F;
+    --gold: #D4AF37;
+    --orange: #E8650A;
+    --light-blue: #E8F4FD;
+    --light-gold: #FFF9E6;
+    --light-green: #E8F5E9;
+    --light-gray: #F5F5F5;
+    --dark-gray: #333;
+    --mid-gray: #666;
+    --white: #fff;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+         background: #f0f2f5; color: var(--dark-gray); font-size: 14px; line-height: 1.6; }
+
+  /* ── HERO ── */
+  .hero {
+    background: linear-gradient(135deg, var(--navy) 0%, #2C5282 60%, var(--teal) 100%);
+    color: white; text-align: center; padding: 50px 20px 40px;
+  }
+  .hero h1 { font-size: 26px; margin-bottom: 8px; letter-spacing: 1px; }
+  .hero .meta { font-size: 13px; opacity: .85; margin-bottom: 18px; }
+  .hero-badges { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+  .badge {
+    background: rgba(255,255,255,.15); border: 1px solid rgba(255,255,255,.3);
+    border-radius: 20px; padding: 6px 16px; font-size: 12px;
+  }
+
+  /* ── NAV ── */
+  .nav-bar {
+    background: var(--navy); position: sticky; top: 0; z-index: 100;
+    overflow-x: auto; white-space: nowrap; padding: 0 10px;
+  }
+  .nav-bar a {
+    display: inline-block; color: rgba(255,255,255,.75); text-decoration: none;
+    padding: 12px 14px; font-size: 12px; transition: color .2s;
+  }
+  .nav-bar a:hover { color: var(--gold); }
+
+  /* ── CONTAINER ── */
+  .container { max-width: 900px; margin: 0 auto; padding: 20px 12px; }
+
+  /* ── OVERVIEW CARD ── */
+  .overview-card {
+    background: white; border-radius: 12px; padding: 20px; margin-bottom: 24px;
+    box-shadow: 0 2px 8px rgba(0,0,0,.08);
+  }
+  .overview-card h2 { color: var(--navy); font-size: 16px; margin-bottom: 14px;
+    border-left: 4px solid var(--gold); padding-left: 10px; }
+  .overview-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .overview-item { background: var(--light-blue); border-radius: 8px; padding: 12px; }
+  .overview-item .label { font-size: 11px; color: var(--teal); font-weight: 600; margin-bottom: 4px; }
+  .overview-item .value { font-size: 13px; color: var(--dark-gray); }
+
+  /* ── DAY CARD ── */
+  .day-card {
+    background: white; border-radius: 12px; margin-bottom: 28px;
+    box-shadow: 0 2px 12px rgba(0,0,0,.08); overflow: hidden;
+  }
+  .day-header {
+    background: linear-gradient(90deg, var(--navy) 0%, #2C5282 100%);
+    color: white; padding: 16px 20px;
+  }
+  .day-header .day-num { font-size: 11px; opacity: .7; text-transform: uppercase; letter-spacing: 1px; }
+  .day-header h2 { font-size: 18px; margin: 4px 0; }
+  .day-header .hotel-tag {
+    display: inline-block; background: rgba(212,175,55,.25); border: 1px solid var(--gold);
+    border-radius: 12px; padding: 3px 10px; font-size: 11px; margin-top: 6px;
+  }
+  .day-summary { padding: 14px 20px; background: var(--light-blue); font-size: 13px;
+    color: var(--dark-gray); border-bottom: 1px solid #ddd; }
+
+  /* ── SCHEDULE TABLE ── */
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  thead tr { background: var(--teal); color: white; }
+  thead th { padding: 10px 8px; text-align: left; font-weight: 600; white-space: nowrap; }
+  tbody tr:nth-child(even) { background: var(--light-gray); }
+  tbody tr:hover { background: #dbeafe; }
+  tbody td { padding: 9px 8px; vertical-align: top; border-bottom: 1px solid #eee; }
+  .time-cell { font-weight: 700; color: var(--navy); white-space: nowrap; min-width: 65px; }
+  .name-cell { font-weight: 600; color: var(--dark-gray); min-width: 100px; }
+  .name-cell.meal { color: var(--orange); }
+  .desc-cell { color: var(--mid-gray); min-width: 150px; font-size: 11.5px; }
+  .dining-cell { color: #2d7a2d; font-size: 11px; min-width: 120px; }
+  .fee-cell { font-size: 11px; color: var(--mid-gray); min-width: 90px; }
+  .transport-cell { font-size: 11px; color: #5566aa; min-width: 100px; }
+
+  /* ── NOTES ── */
+  .notes-section { padding: 16px 20px; background: var(--light-gray); }
+  .notes-section h3 { color: var(--teal); font-size: 13px; margin-bottom: 8px; margin-top: 12px; }
+  .notes-section h3:first-child { margin-top: 0; }
+  .notes-section ul { list-style: none; padding: 0; }
+  .notes-section ul li { font-size: 12px; color: var(--dark-gray); padding: 3px 0 3px 16px;
+    position: relative; line-height: 1.5; }
+  .notes-section ul li::before { content: '•'; position: absolute; left: 0; color: var(--teal); }
+  .notes-section .transport-note { background: #EEF2FF; border-left: 3px solid var(--navy);
+    padding: 8px 12px; border-radius: 4px; font-size: 12px; color: var(--navy); margin-top: 4px; }
+
+  /* ── ADVANCE BOOKING ── */
+  .advance-section { background: white; border-radius: 12px; padding: 24px;
+    box-shadow: 0 2px 12px rgba(0,0,0,.08); margin-top: 28px; }
+  .advance-section h2 { color: var(--orange); font-size: 18px; margin-bottom: 18px;
+    border-left: 4px solid var(--orange); padding-left: 10px; }
+  .advance-item { border: 1px solid #eee; border-radius: 10px; margin-bottom: 16px; overflow: hidden; }
+  .advance-rank { background: var(--orange); color: white; padding: 10px 16px;
+    display: flex; align-items: center; gap: 10px; }
+  .advance-rank .num { font-size: 22px; font-weight: 800; }
+  .advance-rank .item-name { font-size: 14px; font-weight: 600; }
+  .advance-detail { padding: 14px 16px; }
+  .advance-detail p { font-size: 12.5px; margin-bottom: 6px; line-height: 1.6; }
+  .advance-detail .label { font-weight: 600; color: var(--teal); }
+  .advance-detail .timing { background: var(--light-gold); border-radius: 6px;
+    padding: 6px 10px; font-size: 12px; color: var(--orange); font-weight: 600; margin-top: 6px; }
+
+  /* ── FOOTER ── */
+  footer { text-align: center; padding: 24px; font-size: 11px; color: var(--mid-gray);
+    background: var(--navy); color: rgba(255,255,255,.5); margin-top: 24px; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 600px) {
+    .hero h1 { font-size: 20px; }
+    .overview-grid { grid-template-columns: 1fr; }
+    thead th:nth-child(3), tbody td:nth-child(3) { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <h1>✈️ 2026 曼徹斯特‧倫敦<br>親子學術旅遊計畫</h1>
+  <p class="meta">2026年6月28日，7月9日 ｜ 2大人 + 2學齡兒童</p>
+  <div class="hero-badges">
+    <span class="badge">🎓 AIB 年會 6/29，7/3</span>
+    <span class="badge">🏰 Chester Zoo</span>
+    <span class="badge">🗿 巨石陣一日遊</span>
+    <span class="badge">🦕 自然歷史博物館</span>
+    <span class="badge">🛍️ Bicester Village</span>
+  </div>
+</div>
+
+<nav class="nav-bar">
+  <a href="#overview">行程總覽</a>
+  <a href="#day0">D0 出發</a>
+  <a href="#day1">D1 抵達</a>
+  <a href="#day2">D2 工業遺址</a>
+  <a href="#day3">D3 AIB</a>
+  <a href="#day4">D4 Chester</a>
+  <a href="#day5">D5 閉幕</a>
+  <a href="#day6">D6 往倫敦</a>
+  <a href="#day7">D7 博物館</a>
+  <a href="#day8">D8 一日遊</a>
+  <a href="#day9">D9 皇室</a>
+  <a href="#day10">D10 返台</a>
+  <a href="#advance">提前預約</a>
+</nav>
+
+<div class="container">
+
+<!-- OVERVIEW -->
+<div id="overview" class="overview-card">
+  <h2>📋 旅程總覽</h2>
+  <div class="overview-grid">
+    <div class="overview-item">
+      <div class="label">✈️ 去程航班</div>
+      <div class="value">6/28 23:50 TPE 起飛<br>6/29 12:00 MAN 抵達</div>
+    </div>
+    <div class="overview-item">
+      <div class="label">✈️ 回程航班</div>
+      <div class="value">7/8 19:50 LHR 起飛<br>7/9 21:20 TPE 抵達</div>
+    </div>
+    <div class="overview-item">
+      <div class="label">🏨 曼徹斯特住宿（6/29，7/4）</div>
+      <div class="value">Holiday Inn Express Manchester CC，Oxford Road</div>
+    </div>
+    <div class="overview-item">
+      <div class="label">🏨 倫敦住宿（7/4，7/8）</div>
+      <div class="value">Premier Inn London Hammersmith Talgarth Road</div>
+    </div>
+  </div>
+</div>
+
+<!-- DAYS -->
+
+<div id="day0" class="day-card">
+  <div class="day-header">
+    <div class="day-num">Day 0</div>
+    <h2>6月28日（週日），深夜啟程</h2>
+    <span class="hotel-tag">🏠 機上過夜</span>
+  </div>
+  <div class="day-summary">從桃園出發，搭乘夜間班機飛往曼徹斯特。23:50 起飛後，預計飛行約 19 小時抵達英國。建議在機場完成最後的行李確認，並讓孩子在候機期間充分休息。</div>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>時間</th><th>行程名稱</th><th>簡介與細部規劃</th><th>餐飲推薦</th><th>費用</th><th>交通指南</th></tr></thead>
+    <tbody>
+      <tr>
+        <td class="time-cell">21:00，22:30</td>
+        <td class="name-cell"><a href="https://maps.app.goo.gl/TPE_T2" target="_blank">桃園國際機場 T2</a></td>
+        <td class="desc-cell">建議提前 2.5 小時抵達，完成行李托運與安全檢查。出境後可在美食區用晚餐。</td>
+        <td class="dining-cell">欣葉台灣料理（台灣味送行）、漢堡王（孩子友善）</td>
+        <td class="fee-cell">⏰ 24小時<br>💰 免費（入場）</td>
+        <td class="transport-cell">自行開車或計程車，台北市區約 40，60 分鐘</td>
+      </tr>
+      <tr>
+        <td class="time-cell">23:50</td>
+        <td class="name-cell">班機起飛 TPE→MAN</td>
+        <td class="desc-cell">夜間長途飛行，備妥頸枕、耳機與平板電腦。隨身行李備妥常備藥品與孩子零食。</td>
+        <td class="dining-cell">機上餐點，建議提前訂選兒童餐</td>
+        <td class="fee-cell">⏰ 航行中<br>💰 依票種</td>
+        <td class="transport-cell">長途飛行，含轉機約 19 小時</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+  <div class="notes-section">
+    <h3>📌 注意事項</h3>
+    <ul>
+      <li>建議提前 48 小時完成網路報到，選擇靠走道座位，方便帶孩子如廁。</li>
+      <li>隨身行李備妥退燒藥、暈機藥與孩子慣用零食。</li>
+      <li>確認護照、英國 ETA 電子旅行授權均已辦理完畢。</li>
+    </ul>
+    <h3>🚇 當日交通重點</h3>
+    <div class="transport-note">桃園機場可搭乘機場捷運（台北車站出發約 35 分鐘），或自行開車停車。</div>
+  </div>
+</div>
+
+<div id="day1" class="day-card">
+  <div class="day-header">
+    <div class="day-num">Day 1</div>
+    <h2>6月29日（週一），抵達曼徹斯特，入住休整</h2>
+    <span class="hotel-tag">🏠 Holiday Inn Express Manchester CC，Oxford Road</span>
+  </div>
+  <div class="day-summary">6月29日中午 12:00 抵達曼徹斯特機場。完成入境後，搭乘計程車前往飯店辦理入住。下午以輕鬆步調探索 Northern Quarter，晚餐在 Corn Exchange 美食廣場享用，讓家人從長途飛行中緩緩恢復精力。</div>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>時間</th><th>行程名稱</th><th>簡介與細部規劃</th><th>餐飲推薦</th><th>費用</th><th>交通指南</th></tr></thead>
+    <tbody>
+      <tr>
+        <td class="time-cell">12:00，13:30</td>
+        <td class="name-cell"><a href="https://maps.app.goo.gl/MAN_Airport" target="_blank">曼徹斯特機場入境</a></td>
+        <td class="desc-cell">入境英國時需出示護照與 ETA，並通過海關。機場 T2 設有 Boots 藥局，可補充英國版兒童退燒藥。</td>
+        <td class="dining-cell">Pret a Manger 三明治充飢（約 £5，8/人）</td>
+        <td class="fee-cell">⏰ 24小時<br>💰 免費</td>
+        <td class="transport-cell">機場計程車至飯店，約 25，30 分鐘，費用約 £25，35</td>
+      </tr>
+      <tr>
+        <td class="time-cell">14:00，15:30</td>
+        <td class="name-cell"><a href="https://maps.app.goo.gl/HolidayInn_MAN" target="_blank">飯店入住，整理行李</a></td>
+        <td class="desc-cell">Holiday Inn Express Manchester Oxford Road 距 AIB 會議場地步行約 10 分鐘。確認房間設施，備妥次日行程物品。</td>
+        <td class="dining-cell">飯店含早餐（次日起）</td>
+        <td class="fee-cell">⏰ 15:00 入住<br>💰 含住宿</td>
+        <td class="transport-cell">步行範圍</td>
+      </tr>
+      <tr>
+        <td class="time-cell">16:00，18:00</td>
+        <td class="name-cell"><a href="https://maps.app.goo.gl/NorthernQuarter_MCR" target="_blank">Northern Quarter 街頭探索</a></td>
+        <td class="desc-cell">曼徹斯特最富藝術氣息的街區。推薦路線：Tib Street → Church Street 壁畫 → Oldham Street 獨立書店 → Afflecks 複合市集（4層樓，二手與創意小店）。</td>
+        <td class="dining-cell">Afflecks 內有小吃攤，咖啡約 £3，4</td>
+        <td class="fee-cell">⏰ 全天<br>💰 免費</td>
+        <td class="transport-cell">從飯店步行約 15 分鐘</td>
+      </tr>
+      <tr>
+        <td class="time-cell">18:30，20:00</td>
+        <td class="name-cell meal"><a href="https://maps.app.goo.gl/CornExchange_MCR" target="_blank">【晚餐】Corn Exchange 美食廣場</a></td>
+        <td class="desc-cell">維多利亞式建築改建的美食廣場，挑高圓頂極具視覺衝擊，匯集多國料理。</td>
+        <td class="dining-cell">① Bundobust（印度街頭小食，咖哩蔬菜球 £6）<br>② Almost Famous（漢堡 £14，兒童套餐 £8）</td>
+        <td class="fee-cell">⏰ 11:00，22:00<br>💰 各自結算</td>
+        <td class="transport-cell">從飯店步行約 20 分鐘，或 Metrolink 1 站</td>
+      </tr>
+      <tr>
+        <td class="time-cell">20:30</td>
+        <td class="name-cell">返回飯店休息</td>
+        <td class="desc-cell">抵達英國的第一晚，建議早點讓孩子就寢以調整時差（英國比台灣慢 7 小時）。</td>
+        <td class="dining-cell"></td>
+        <td class="fee-cell"></td>
+        <td class="transport-cell">步行或計程車約 20 分鐘</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+  <div class="notes-section">
+    <h3>📌 注意事項</h3>
+    <ul>
+      <li>時差：英國夏令時間（BST）比台灣慢 7 小時，建議孩子睡前調整手機時鐘。</li>
+      <li>最近洗手間：Corn Exchange 內部各樓均設有廁所。</li>
+      <li>雨天備案：Northern Quarter 改為室內參觀 Afflecks，同樣精采。</li>
+      <li>英國插頭為三角方形插頭，請備妥萬用轉接頭。</li>
+    </ul>
+    <h3>🚇 當日交通重點</h3>
+    <div class="transport-note">本日主要以計程車和步行為主。可在飯店詢問如何辦理 Metrolink 輕軌交通卡。</div>
+  </div>
+</div>
+
+<div id="day2" class="day-card">
+  <div class="day-header">
+    <div class="day-num">Day 2</div>
+    <h2>6月30日（週二），科學工業博物館，Castlefield 運河</h2>
+    <span class="hotel-tag">🏠 Holiday Inn Express Manchester CC，Oxford Road</span>
+  </div>
+  <div class="day-summary">今日以曼徹斯特工業革命遺產為主題。上午參觀世界最古老的科學與工業博物館（免費），下午漫步 Castlefield 運河盆地，在維多利亞式高架橋下享受悠閒河岸午後。晚餐在中國城探索道地亞洲風味。</div>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>時間</th><th>行程名稱</th><th>簡介與細部規劃</th><th>餐飲推薦</th><th>費用</th><th>交通指南</th></tr></thead>
+    <tbody>
+      <tr>
+        <td class="time-cell">09:00</td>
+        <td class="name-cell">飯店早餐</td>
+        <td class="desc-cell">Holiday Inn Express 自助式含早餐，英式早餐選項齊全。</td>
+        <td class="dining-cell">含於房費</td>
+        <td class="fee-cell">⏰ 06:30，10:00<br>💰 含住宿</td>
+        <td class="transport-cell">飯店內</td>
+      </tr>
+      <tr>
+        <td class="time-cell">10:00，13:00</td>
+        <td class="name-cell"><a href="https://maps.app.goo.gl/MOSI_MCR" target="_blank">科學與工業博物館（MOSI）</a></td>
+        <td class="desc-cell">世界第一座客運火車站遺址。必看：① 動力廳真實蒸汽引擎；② 航空廳懸掛老式飛機；③ 紡織廳。建議：入口→動力廳→紡織廳→航空廳。</td>
+        <td class="dining-cell">館內咖啡廳，三明治 £6，咖啡 £3</td>
+        <td class="fee-cell">⏰ 10:00，17:00<br>💰 完全免費</td>
+        <td class="transport-cell">從飯店步行 25 分鐘，或 Metrolink 至 Deansgate 再步行 10 分鐘</td>
+      </tr>
+      <tr>
+        <td class="time-cell">13:00，14:00</td>
+        <td class="name-cell meal"><a href="https://maps.app.goo.gl/Elnecot_MCR" target="_blank">【午餐】Elnecot</a></td>
+        <td class="desc-cell">距博物館步行 5 分鐘，現代英式料理，環境寬敞，兒童友善。</td>
+        <td class="dining-cell">烤雞腿配炸薯條 £15，兒童套餐 £8（含主食飲料）</td>
+        <td class="fee-cell">⏰ 週二至週日 12:00，21:00<br>💰 人均 £15，25</td>
+        <td class="transport-cell">步行 5 分鐘</td>
+      </tr>
+      <tr>
+        <td class="time-cell">14:30，17:30</td>
+        <td class="name-cell"><a href="https://maps.app.goo.gl/Castlefield_MCR" target="_blank">Castlefield 運河盆地</a></td>
+        <td class="desc-cell">英國第一個城市遺產公園。路線：① Castlefield 吊橋俯瞰（必拍）；② 沿河岸步道至維多利亞高架橋；③ 羅馬堡壘 Roman Fort 遺址（免費）；④ 河岸草地野餐。</td>
+        <td class="dining-cell">附近 Bundobust 或 Home 酒吧，啤酒 £5，輕食 £8</td>
+        <td class="fee-cell">⏰ 全天<br>💰 免費</td>
+        <td class="transport-cell">從午餐地點步行約 10 分鐘</td>
+      </tr>
+      <tr>
+        <td class="time-cell">18:30，20:00</td>
+        <td class="name-cell meal"><a href="https://maps.app.goo.gl/Chinatown_MCR" target="_blank">【晚餐】曼徹斯特中國城</a></td>
+        <td class="desc-cell">英國第二大中國城，George Street 一帶集中港式、川菜、台式餐廳。</td>
+        <td class="dining-cell">① Yang Sing（港式點心，各籠 £4，6；2大2小約 £50）<br>② Samsi（日式居酒屋，炸雞塊 £8）</td>
+        <td class="fee-cell">⏰ 12:00，22:00<br>💰 人均 £15，25</td>
+        <td class="transport-cell">從 Castlefield 步行約 20 分鐘，或 Metrolink 至 St. Peter's Square</td>
+      </tr>
+      <tr>
+        <td class="time-cell">20:30</td>
+        <td class="name-cell">返回飯店</td>
+        <td class="desc-cell"></td>
+        <td class="dining-cell"></td>
+        <td class="fee-cell"></td>
+        <td class="transport-cell">步行約 15 分鐘</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+  <div class="notes-section">
+    <h3>📌 注意事項</h3>
+    <ul>
+      <li>MOSI 博物館建議工作日早上 10 點開門即入場，人潮較少。</li>
+      <li>洗手間：MOSI 各展廳均有，Castlefield 園區有公共廁所。</li>
+      <li>雨天備案：取消 Castlefield 戶外，改為延長 MOSI 或前往 Arndale 購物中心。</li>
+    </ul>
+    <h3>🚇 當日交通重點</h3>
+    <div class="transport-note">今日步行為主，距離約 3，5 公里。備用：Metrolink 輕軌一日票約 £5，可無限次搭乘。</div>
+  </div>
+</div>
+
+<div id="day3" class="day-card">
+  <div class="day-header">
+    <div class="day-num">Day 3</div>
+    <h2>7月1日（週三），曼徹斯特博物館，AIB 年會</h2>
+    <span class="hotel-tag">🏠 Holiday Inn Express Manchester CC，Oxford Road</span>
+  </div>
+  <div class="day-summary">上午全家共遊曼徹斯特大學校園內的自然歷史博物館，下午大人赴 AIB 年會，孩子可前往曼城美術館欣賞英國繪畫（由一位大人陪同）。傍晚在 Deansgate 享用晚餐。</div>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>時間</th><th>行程名稱</th><th>簡介與細部規劃</th><th>餐飲推薦</th><th>費用</th><th>交通指南</th></tr></thead>
+    <tbody>
+      <tr><td class="time-cell">09:00</td><td class="name-cell">飯店早餐</td><td class="desc-cell">自助式英式早餐。</td><td class="dining-cell">含於房費</td><td class="fee-cell">⏰ 06:30，10:00<br>💰 含住宿</td><td class="transport-cell">飯店內</td></tr>
+      <tr>
+        <td class="time-cell">10:00，12:30</td>
+        <td class="name-cell"><a href="https://maps.app.goo.gl/McrMuseum" target="_blank">曼徹斯特博物館</a></td>
+        <td class="desc-cell">必看：① Stan the T-Rex 恐龍化石；② 古埃及木乃伊展（超過 20 具）；③ Living Cultures 世界傳統服飾。博物館庭院適合孩子奔跑。</td>
+        <td class="dining-cell">館內咖啡廳，三明治 £6</td>
+        <td class="fee-cell">⏰ 週二至週日 10:00，17:00<br>💰 完全免費</td>
+        <td class="transport-cell">從飯店步行約 15 分鐘，沿 Oxford Road 南行</td>
+      </tr>
+      <tr>
+        <td class="time-cell">12:30，13:30</td>
+        <td class="name-cell meal"><a href="https://maps.app.goo.gl/EarthCafe_MCR" target="_blank">【午餐】Earth Café</a></td>
+        <td class="desc-cell">純素友善咖啡廳，距博物館步行 5 分鐘，環境安靜。</td>
+        <td class="dining-cell">蔬菜咖哩飯 £9，自製蛋糕 £4</td>
+        <td class="fee-cell">⏰ 週一至週六 09:00，17:00<br>💰 人均 £10，15</td>
+        <td class="transport-cell">步行 5 分鐘</td>
+      </tr>
+      <tr>
+        <td class="time-cell">14:00，17:30</td>
+        <td class="name-cell"><a href="https://maps.app.goo.gl/McrArtGallery" target="_blank">【大人】AIB 年會 ／ 【孩子】曼城藝術長廊</a></td>
+        <td class="desc-cell">大人：Alliance Manchester Business School（Booth Street West，M15 6PB）。孩子：Manchester Art Gallery，設有兒童藝術工作坊，必看前拉斐爾派畫作。</td>
+        <td class="dining-cell">藝術長廊附設咖啡廳，蛋糕 £4</td>
+        <td class="fee-cell">⏰ 藝術長廊 10:00，17:00<br>💰 免費</td>
+        <td class="transport-cell">藝術長廊：從博物館搭 Metrolink 2 站至 Piccadilly Gardens，步行 5 分鐘</td>
+      </tr>
+      <tr>
+        <td class="time-cell">18:30，20:00</td>
+        <td class="name-cell meal"><a href="https://maps.app.goo.gl/Hawksmoor_MCR" target="_blank">【晚餐】Hawksmoor Manchester</a></td>
+        <td class="desc-cell">英國知名牛排館，Deansgate 旗艦店裝潢典雅，適合學術會議後的慶功餐。</td>
+        <td class="dining-cell">Porterhouse 牛排 £65，牛肉漢堡 £20，兒童薯條 £6</td>
+        <td class="fee-cell">⏰ 週一至週六 12:00，22:00<br>💰 人均 £40，60</td>
+        <td class="transport-cell">從飯店步行約 20 分鐘至 Deansgate</td>
+      </tr>
+      <tr><td class="time-cell">20:30</td><td class="name-cell">返回飯店</td><td class="desc-cell"></td><td class="dining-cell"></td><td class="fee-cell"></td><td class="transport-cell">步行約 20 分鐘</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <div class="notes-section">
+    <h3>📌 注意事項</h3>
+    <ul>
+      <li>曼徹斯特博物館 2023 年完成大規模翻修，展示品全面升級，強烈推薦。</li>
+      <li>洗手間：博物館入口大廳旁即有。</li>
+      <li>雨天備案：今日行程以室內為主，雨天影響不大。</li>
+    </ul>
+    <h3>🚇 當日交通重點</h3>
+    <div class="transport-note">Metrolink 輕軌單程約 £2.50，建議購買一日票 £5 較划算。曼城藝術長廊距 Piccadilly Gardens 步行約 5 分鐘。</div>
+  </div>
+</div>
+
+<div id="day4" class="day-card">
+  <div class="day-header">
+    <div class="day-num">Day 4</div>
+    <h2>7月2日（週四），Chester 古城，Chester Zoo</h2>
+    <span class="hotel-tag">🏠 Holiday Inn Express Manchester CC，Oxford Road</span>
+  </div>
+  <div class="day-summary">搭乘火車前往英格蘭保存最完整的羅馬城牆古城。沿城牆漫步俯瞰城市，穿越黑白木構的「排屋」，下午前往世界頂級的 Chester Zoo 與孩子共度充滿動物驚喜的午後。</div>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>時間</th><th>行程名稱</th><th>簡介與細部規劃</th><th>餐飲推薦</th><th>費用</th><th>交通指南</th></tr></thead>
+    <tbody>
+      <tr><td class="time-cell">08:30</td><td class="name-cell">飯店早餐後出發</td><td class="desc-cell">今日需早出，建議 08:00 用早餐。</td><td class="dining-cell">含於房費</td><td class="fee-cell">⏰ 06:30，10:00<br>💰 含住宿</td><td class="transport-cell">飯店步行 20 分鐘至 Piccadilly，或 Metrolink</td></tr>
+      <tr>
+        <td class="time-cell">09:10，10:05</td>
+        <td class="name-cell"><a href="https://maps.app.goo.gl/McrPiccadilly" target="_blank">火車 Manchester Piccadilly→Chester</a></td>
+        <td class="desc-cell">TransPennine Express 直達車，車程約 55 分鐘。可使用 Family & Friends Railcard 折扣 1/3。</td>
+        <td class="dining-cell">火車上可攜帶自備零食</td>
+        <td class="fee-cell">⏰ 首班約 07:10<br>💰 4人來回約 £30，50（含 Railcard）</td>
+        <td class="transport-cell">Manchester Piccadilly 站搭車，約 55 分鐘至 Chester 站</td>
+      </tr>
+      <tr>
+        <td class="time-cell">10:15，12:00</td>
+        <td class="name-cell"><a href="https://maps.app.goo.gl/ChesterWalls" target="_blank">Chester 城牆漫步，The Rows</a></td>
+        <td class="desc-cell">世界最完整羅馬城牆（全長 3 公里）。必看：① 北門俯瞰威爾斯山丘；② Eastgate Clock 地標時鐘；③ The Rows 雙層木構廊街。建議繞城半圈後下到 Eastgate Street 逛 The Rows。</td>
+        <td class="dining-cell">The Rows 廊街有咖啡廳，咖啡 £3，甜點 £4</td>
+        <td class="fee-cell">⏰ 全天開放<br>💰 免費</td>
+        <td class="transport-cell">從 Chester 火車站步行約 10 分鐘至城牆入口</td>
+      </tr>
+      <tr>
+        <td class="time-cell">12:00，13:00</td>
+        <td class="name-cell meal"><a href="https://maps.app.goo.gl/ChesterCathedral" target="_blank">【午餐】The Refectory at Chester Cathedral</a></td>
+        <td class="desc-cell">切斯特大教堂內附設餐廳，哥德式石拱屋頂下用餐，體驗獨特。</td>
+        <td class="dining-cell">炸魚薯條 £14，兒童三明治套餐 £7（含薯條及飲料），司康下午茶 £6</td>
+        <td class="fee-cell">⏰ 10:00，17:00<br>💰 人均 £10，18</td>
+        <td class="transport-cell">從 Eastgate Street 步行 3 分鐘</td>
+      </tr>
+      <tr>
+        <td class="time-cell">13:30，17:00</td>
+        <td class="name-cell"><a href="https://maps.app.goo.gl/ChesterZoo" target="_blank">Chester Zoo ⭐ 需提前購票</a></td>
+        <td class="desc-cell">英國最佳動物園之一，動物種類超過 35,000 隻。重點區域：① Islands 東南亞展區（紅毛猩猩空中走廊）；② Big Cats；③ Butterfly Journey（熱帶蝴蝶花園）。建議搭園內免費高架單軌電車俯瞰全園。</td>
+        <td class="dining-cell">園區內 Brasserie 或小賣亭，漢堡 £9，冰淇淋 £3</td>
+        <td class="fee-cell">⏰ 09:00，18:00<br>💰 成人 £32，兒童 £24，2大2小共 £112</td>
+        <td class="transport-cell">Chester 市中心搭 1 號公車（約 15 分，£2.5/人），或計程車 £8，10</td>
+      </tr>
+      <tr><td class="time-cell">17:30，18:30</td><td class="name-cell">火車返回曼徹斯特</td><td class="desc-cell">Chester 站搭車返回，車程約 55 分鐘，孩子可在車上補眠。</td><td class="dining-cell"></td><td class="fee-cell">💰 含於來回票</td><td class="transport-cell">Chester→Manchester Piccadilly，約 55 分鐘</td></tr>
+      <tr><td class="time-cell">19:30，20:30</td><td class="name-cell meal">【晚餐】飯店附近輕食</td><td class="desc-cell">今日體力消耗較大，建議輕食晚餐。</td><td class="dining-cell">Döner Haus（德式烤肉捲，£8，12）或 Deliveroo 外送</td><td class="fee-cell">💰 人均 £8，15</td><td class="transport-cell">步行範圍</td></tr>
+      <tr><td class="time-cell">21:00</td><td class="name-cell">返回飯店</td><td class="desc-cell"></td><td class="dining-cell"></td><td class="fee-cell"></td><td class="transport-cell">步行</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <div class="notes-section">
+    <h3>📌 注意事項</h3>
+    <ul>
+      <li>Chester Zoo 建議提前於官網（chesterzoo.org）購票，旺季現場可能售罄，且線上票較便宜。</li>
+      <li>Chester 城牆部分路段較窄，請注意孩子安全，避免靠近邊緣。</li>
+      <li>洗手間：城牆附近 Town Hall 廣場有公共廁所，Chester Zoo 各區均有。</li>
+      <li>雨天備案：取消城牆漫步，改為參觀 Chester Cathedral（£5/人），縮短動物園時間。</li>
+    </ul>
+    <h3>🚇 當日交通重點</h3>
+    <div class="transport-note">全日重點交通：曼城，切斯特火車（55分）。切斯特市內建議步行，前往動物園可搭 1 號公車。</div>
+  </div>
+</div>
+
+<div id="day5" class="day-card">
+  <div class="day-header">
+    <div class="day-num">Day 5</div>
+    <h2>7月3日（週五），AIB 閉幕，足球博物館，人民歷史博物館</h2>
+    <span class="hotel-tag">🏠 Holiday Inn Express Manchester CC，Oxford Road</span>
+  </div>
+  <div class="day-summary">上午大人出席 AIB 年會閉幕式，孩子參觀國家足球博物館（互動射門模擬器，孩子超愛）。下午全家同遊人民歷史博物館，了解英國工人運動歷史。傍晚在 Spinningfields 金融區享受輕鬆晚餐，為曼城之旅畫下句點。</div>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>時間</th><th>行程名稱</th><th>簡介與細部規劃</th><th>餐飲推薦</th><th>費用</th><th>交通指南</th></tr></thead>
+    <tbody>
+      <tr><td class="time-cell">09:00</td><td class="name-cell">飯店早餐</td><td class="desc-cell">今日最後一天在曼徹斯特，可開始整理行李。</td><td class="dining-cell">含於房費</td><td class="fee-cell">⏰ 06:30，10:00<br>💰 含住宿</td><td class="transport-cell">飯店內</td></tr>
+      <tr>
+        <td class="time-cell">09:30，12:00</td>
+        <td class="name-cell"><a href="https://maps.app.goo.gl/NationalFootball_MCR" target="_blank">【大人】AIB 閉幕 ／ 【孩子】國家足球博物館</a></td>
+        <td class="desc-cell">國家足球博物館（National Football Museum）位於 Urbis 建築內，互動裝置豐富，包含射門模擬器與球員體能測試。必看：FIFA 世界盃展示廳。</td>
+        <td class="dining-cell">館內咖啡廳，熱巧克力 £3</td>
+        <td class="fee-cell">⏰ 每日 10:00，17:00<br>💰 免費</td>
+        <td class="transport-cell">從飯店步行約 20 分鐘，或搭 Metrolink 至 Market Street</td>
+      </tr>
+      <tr>
+        <td class="time-cell">12:30，13:30</td>
+        <td class="name-cell meal"><a href="https://maps.app.goo.gl/Rudys_MCR" target="_blank">【午餐】Rudy's Neapolitan Pizza</a></td>
+        <td class="desc-cell">曼城知名那不勒斯披薩店，木柴烤爐。</td>
+        <td class="dining-cell">Margherita 披薩 £12，Nduja 香辣薩拉米 £15，兒童可分食</td>
+        <td class="fee-cell">⏰ 11:30，22:00<br>💰 人均 £15，20</td>
+        <td class="transport-cell">從足球博物館步行約 10 分鐘</td>
+      </tr>
+      <tr>
+        <td class="time-cell">14:00，16:30</td>
+        <td class="name-cell"><a href="https://maps.app.goo.gl/PeopleHistory_MCR" target="_blank">人民歷史博物館</a></td>
+        <td class="desc-cell">英國唯一以工人運動與民主歷史為主題的博物館。必看：① Chartist 憲章運動原件；② 工會旗幟大廳（高掛數十面織錦旗幟）；③ 勞工生活重現展區（讓孩子了解 19 世紀英國童工）。</td>
+        <td class="dining-cell">館內咖啡廳，下午茶 £6</td>
+        <td class="fee-cell">⏰ 週三至週日 10:00，17:00<br>💰 免費</td>
+        <td class="transport-cell">從午餐地點步行約 15 分鐘，或搭 Metrolink 至 Deansgate-Castlefield</td>
+      </tr>
+      <tr>
+        <td class="time-cell">17:30，19:30</td>
+        <td class="name-cell meal"><a href="https://maps.app.goo.gl/Spinningfields_MCR" target="_blank">【晚餐】Spinningfields 金融區</a></td>
+        <td class="desc-cell">曼城現代玻璃建築與河畔步道融合，多家戶外露天餐廳。</td>
+        <td class="dining-cell">① Tattu（現代中式，炸蝦餃 £12，北京烤鴨捲 £16）<br>② Slug & Lettuce（Fish & Chips £13，孩子友善）</td>
+        <td class="fee-cell">⏰ 18:00，23:00<br>💰 人均 £20，35</td>
+        <td class="transport-cell">從博物館步行約 10 分鐘</td>
+      </tr>
+      <tr><td class="time-cell">20:30</td><td class="name-cell">返回飯店，整理行李</td><td class="desc-cell">明日需搭乘 10:00，11:00 班次火車前往倫敦，請提前整理行李。</td><td class="dining-cell"></td><td class="fee-cell"></td><td class="transport-cell">步行約 15，20 分鐘</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <div class="notes-section">
+    <h3>📌 注意事項</h3>
+    <ul>
+      <li>人民歷史博物館週一、週二公休，7月3日（週五）確認開放。</li>
+      <li>洗手間：各博物館入口均設有。</li>
+      <li>行李整理：建議提前確認 Avanti West Coast 火車票，了解 Manchester Piccadilly 行李寄存服務。</li>
+    </ul>
+    <h3>🚇 當日交通重點</h3>
+    <div class="transport-note">今日以步行和 Metrolink 為主。若攜帶大件行李移動，建議叫 Uber 較方便。</div>
+  </div>
+</div>
+
+<div id="day6" class="day-card">
+  <div class="day-header">
+    <div class="day-num">Day 6</div>
+    <h2>7月4日（週六），曼城→倫敦，海德公園，肯辛頓</h2>
+    <span class="hotel-tag">🏠 Premier Inn London Hammersmith Talgarth Road（入住）</span>
+  </div>
+  <div class="day-summary">上午辦理退房，搭乘 Avanti West Coast 高速列車南下倫敦（約 2 小時）。抵達 Euston 後，搭地鐵直達 Hammersmith 入住 Premier Inn。下午前往海德公園，讓孩子在戴安娜王妃紀念遊樂場盡情玩耍。</div>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>時間</th><th>行程名稱</th><th>簡介與細部規劃</th><th>餐飲推薦</th><th>費用</th><th>交通指南</th></tr></thead>
+    <tbody>
+      <tr><td class="time-cell">08:00，09:30</td><td class="name-cell">飯店早餐，完成退房</td><td class="desc-cell">09:30 前辦理退房並叫車前往火車站。</td><td class="dining-cell">含於房費</td><td class="fee-cell">⏰ 06:30，10:00<br>💰 含住宿</td><td class="transport-cell">步行或計程車前往 Manchester Piccadilly（20，30 分鐘）</td></tr>
+      <tr>
+        <td class="time-cell">10:00，12:30</td>
+        <td class="name-cell"><a href="https://maps.app.goo.gl/McrPiccadilly" target="_blank">Avanti 列車 Manchester→London Euston</a></td>
+        <td class="desc-cell">Pendolino 傾斜式高速列車，最快 2 小時，設有餐車與 WiFi。提前於 avantiwestcoast.co.uk 訂購 Advance 票。</td>
+        <td class="dining-cell">餐車三明治 £5，8，咖啡 £3</td>
+        <td class="fee-cell">⏰ 每 30 分鐘一班<br>💰 4人含 Railcard 約 NT$2,400，4,200</td>
+        <td class="transport-cell">Manchester Piccadilly→London Euston，約 2 小時 15 分鐘</td>
+      </tr>
+      <tr>
+        <td class="time-cell">13:00，14:30</td>
+        <td class="name-cell"><a href="https://maps.app.goo.gl/PremierInn_Hammersmith" target="_blank">抵達倫敦，地鐵前往 Hammersmith，入住</a></td>
+        <td class="desc-cell">從 Euston Square 站搭 Hammersmith & City Line 直達 Hammersmith（約 25，30 分鐘，無需換車）。寄放行李後午餐。</td>
+        <td class="dining-cell"></td>
+        <td class="fee-cell">⏰ Check-in 14:00<br>💰 地鐵約 £3.5/人</td>
+        <td class="transport-cell">Euston Square→（H&C Line）→Hammersmith，約 25 分鐘，直達</td>
+      </tr>
+      <tr>
+        <td class="time-cell">14:30，15:30</td>
+        <td class="name-cell meal"><a href="https://maps.app.goo.gl/HonestBurgers_Ham" target="_blank">【午餐】Honest Burgers，Hammersmith</a></td>
+        <td class="desc-cell">英國人氣連鎖精品漢堡，步行距飯店 5 分鐘，兒童友善。</td>
+        <td class="dining-cell">Honest Burger £13.5，Chicken Burger £12，Mini Burger £7，附招牌迷迭香薯條</td>
+        <td class="fee-cell">⏰ 11:00，22:00<br>💰 人均 £12，18</td>
+        <td class="transport-cell">步行 5 分鐘</td>
+      </tr>
+      <tr>
+        <td class="time-cell">16:00，19:00</td>
+        <td class="name-cell"><a href="https://maps.app.goo.gl/HydePark_London" target="_blank">海德公園，戴安娜王妃紀念遊樂場</a></td>
+        <td class="desc-cell">必訪：① Diana Memorial Playground（彼得潘主題，大型木製海盜船，12歲以下核心區）；② Serpentine 湖（租小船 £15/30 分鐘）；③ 肯辛頓宮外圍花園。</td>
+        <td class="dining-cell">公園內 Lido Café，冰淇淋 £3，飲料 £4</td>
+        <td class="fee-cell">⏰ 公園 05:30，23:30；遊樂場 10:00，18:00<br>💰 免費（划船 £15）</td>
+        <td class="transport-cell">Hammersmith→（District Line）→High Street Kensington，步行 15 分鐘；或搭 9 號公車</td>
+      </tr>
+      <tr>
+        <td class="time-cell">19:30，21:00</td>
+        <td class="name-cell meal"><a href="https://maps.app.goo.gl/KensingtonHighSt" target="_blank">【晚餐】Kensington High Street</a></td>
+        <td class="desc-cell">肯辛頓大街餐飲豐富，步行可達。</td>
+        <td class="dining-cell">① Patara（泰式料理，紅咖哩 £16）<br>② Byron Burger（兒童套餐 £9）</td>
+        <td class="fee-cell">⏰ 17:00，22:00<br>💰 人均 £15，25</td>
+        <td class="transport-cell">從遊樂場步行約 15 分鐘至 Kensington High Street</td>
+      </tr>
+      <tr><td class="time-cell">21:30</td><td class="name-cell">返回飯店</td><td class="desc-cell"></td><td class="dining-cell"></td><td class="fee-cell"></td><td class="transport-cell">搭 District Line 至 Hammersmith，約 15 分鐘</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <div class="notes-section">
+    <h3>📌 注意事項</h3>
+    <ul>
+      <li>戴安娜王妃紀念遊樂場旺季（7月）非常熱門，建議 16:00 前入場，人潮較少。</li>
+      <li>洗手間：海德公園內多處設有，遊樂場旁即有。</li>
+      <li>雨天備案：取消公園，改為前往 Victoria & Albert Museum（免費，距 Hammersmith 約 20 分）。</li>
+      <li>倫敦交通使用 Contactless 感應信用卡即可，兒童需在站務員處免費辦理兒童票卡。</li>
+    </ul>
+    <h3>🚇 當日交通重點</h3>
+    <div class="transport-note">關鍵路線：Euston Square→Hammersmith（H&C Line，直達，約 25 分）；Hammersmith→High Street Kensington（District Line，3 站，約 8 分）。</div>
+  </div>
+</div>
+
+<div id="day7" class="day-card">
+  <div class="day-header">
+    <div class="day-num">Day 7</div>
+    <h2>7月5日（週日），自然歷史博物館，科學博物館</h2>
+    <span class="hotel-tag">🏠 Premier Inn London Hammersmith Talgarth Road</span>
+  </div>
+  <div class="day-summary">倫敦博物館日！從 Hammersmith 搭地鐵 3 站直達 South Kensington，將上午和下午完整用於全英最受歡迎的兩大免費博物館。孩子可以近距離看到真實恐龍化石與藍鯨骨架。傍晚在 South Kensington 享用特色晚餐。</div>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>時間</th><th>行程名稱</th><th>簡介與細部規劃</th><th>餐飲推薦</th><th>費用</th><th>交通指南</th></tr></thead>
+    <tbody>
+      <tr><td class="time-cell">09:00</td><td class="name-cell">飯店早餐</td><td class="desc-cell">Premier Inn 吃到飽英式早餐，2位大人購買，2位兒童免費（16歲以下）。</td><td class="dining-cell">含於房費（兒童免費）</td><td class="fee-cell">⏰ 06:30，10:00<br>💰 含住宿</td><td class="transport-cell">飯店內</td></tr>
+      <tr>
+        <td class="time-cell">10:00，13:00</td>
+        <td class="name-cell"><a href="https://maps.app.goo.gl/NHM_London" target="_blank">自然歷史博物館 ⭐ 需提前預約</a></td>
+        <td class="desc-cell">必看：① Hintze Hall 藍鯨骨架「Hope」（25公尺，震撼）；② Dinosaur Gallery 真實化石含動態恐龍；③ Earthquake Simulator 地震體驗。路線：正門→藍鯨大廳→恐龍廳→地震展廳。</td>
+        <td class="dining-cell">館內 Central Café，三明治 £8，熱湯 £5</td>
+        <td class="fee-cell">⏰ 每日 10:00，17:50<br>💰 完全免費（需線上預約）</td>
+        <td class="transport-cell">從飯店搭 District Line 至 South Kensington，步行 5 分鐘</td>
+      </tr>
+      <tr>
+        <td class="time-cell">13:00，14:00</td>
+        <td class="name-cell meal"><a href="https://maps.app.goo.gl/ExhibitionRoad" target="_blank">【午餐】Exhibition Road 餐廳區</a></td>
+        <td class="desc-cell">博物館周邊多家咖啡廳，快速補充體力。</td>
+        <td class="dining-cell">① The Dispatch（輕食三明治 £8，12）<br>② 博物館館內 Café（湯品 £5，三明治 £8，方便快速）</td>
+        <td class="fee-cell">⏰ 10:00，17:30<br>💰 人均 £8，15</td>
+        <td class="transport-cell">步行 1，2 分鐘</td>
+      </tr>
+      <tr>
+        <td class="time-cell">14:30，17:30</td>
+        <td class="name-cell"><a href="https://maps.app.goo.gl/ScienceMuseum_London" target="_blank">科學博物館</a></td>
+        <td class="desc-cell">必看：① Wonderlab（需另購票 £10，互動實驗強烈推薦）；② Space Gallery，阿波羅 10 號真實太空艙；③ Mathematics Gallery（扎哈·哈蒂設計）。</td>
+        <td class="dining-cell">館內咖啡廳，蛋糕 £4</td>
+        <td class="fee-cell">⏰ 每日 10:00，18:00<br>💰 常設展免費；Wonderlab £10/人</td>
+        <td class="transport-cell">從自然歷史博物館步行 3 分鐘</td>
+      </tr>
+      <tr>
+        <td class="time-cell">18:30，20:00</td>
+        <td class="name-cell meal"><a href="https://maps.app.goo.gl/Daquise_London" target="_blank">【晚餐】Daquise，South Kensington</a></td>
+        <td class="desc-cell">1947 年開業的倫敦老字號波蘭餐廳，James Bond 故事曾提及。</td>
+        <td class="dining-cell">Pierogi 水煮餃子 £12（馬鈴薯起司或肉餡），Bigos 燉肉 £16，兒童 Chicken Schnitzel £13</td>
+        <td class="fee-cell">⏰ 每日 12:00，23:00<br>💰 人均 £18，25</td>
+        <td class="transport-cell">步行 5 分鐘</td>
+      </tr>
+      <tr><td class="time-cell">21:00</td><td class="name-cell">返回飯店</td><td class="desc-cell"></td><td class="dining-cell"></td><td class="fee-cell"></td><td class="transport-cell">搭 District Line 至 Hammersmith，約 8 分鐘</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <div class="notes-section">
+    <h3>📌 注意事項</h3>
+    <ul>
+      <li>自然歷史博物館強烈建議提前於 nhm.ac.uk 預約免費入場票，7月暑假高峰尤為重要。</li>
+      <li>洗手間：兩館入口均設有家庭廁所與嬰兒換尿布台。</li>
+      <li>雨天備案：完全室內行程，雨天更是理想參觀日。</li>
+      <li>Science Museum Wonderlab 建議提前線上購票，旺季現場票可能售罄。</li>
+    </ul>
+    <h3>🚇 當日交通重點</h3>
+    <div class="transport-note">District Line 從 Hammersmith 到 South Kensington 約 8 分鐘，3 站直達。全日地鐵費用約 £7/人（有每日上限保護機制）。</div>
+  </div>
+</div>
+
+<div id="day8" class="day-card">
+  <div class="day-header">
+    <div class="day-num">Day 8</div>
+    <h2>7月6日（週一），溫莎，巨石陣，牛津，跟團一日遊</h2>
+    <span class="hotel-tag">🏠 Premier Inn London Hammersmith Talgarth Road</span>
+  </div>
+  <div class="day-summary">今日安排英格蘭三大經典景點跟團一日遊，由維多利亞教練站出發，走訪溫莎古堡、史前巨石陣與牛津大學城。導遊帶領下省去複雜規劃，是讓孩子理解英國歷史深度的最高效方式。全程約 11，12 小時。</div>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>時間</th><th>行程名稱</th><th>簡介與細部規劃</th><th>餐飲推薦</th><th>費用</th><th>交通指南</th></tr></thead>
+    <tbody>
+      <tr>
+        <td class="time-cell">07:00，07:45</td>
+        <td class="name-cell">飯店早餐，前往 Victoria</td>
+        <td class="desc-cell">提早用餐，08:30 前需抵達 Bulleid Way 教練站（Stance 3）集合。</td>
+        <td class="dining-cell">飯店早餐含於房費</td>
+        <td class="fee-cell">⏰ 06:30，08:00<br>💰 含住宿</td>
+        <td class="transport-cell">Hammersmith→（District Line）→Victoria，約 15 分鐘；Victoria 步行 5 分至教練站</td>
+      </tr>
+      <tr>
+        <td class="time-cell">08:30，10:30</td>
+        <td class="name-cell"><a href="https://maps.app.goo.gl/WindsorCastle" target="_blank">溫莎古堡（Windsor Castle）⭐ 需提前購票</a></td>
+        <td class="desc-cell">世界最古老、持續有人居住的城堡（建於 1070 年）。必看：① State Apartments（國家廳）；② St. George's Chapel（哈利王子婚禮場地）；③ Changing of the Guard（週一，三，五，六約 11:00）。</td>
+        <td class="dining-cell">城堡附近 Crooked House（英式茶館，下午茶 £12）</td>
+        <td class="fee-cell">⏰ 10:00，17:15<br>💰 含於一日遊套票</td>
+        <td class="transport-cell">冷氣豪華教練，導遊帶領</td>
+      </tr>
+      <tr>
+        <td class="time-cell">12:30，14:00</td>
+        <td class="name-cell"><a href="https://maps.app.goo.gl/Stonehenge" target="_blank">巨石陣（Stonehenge）</a></td>
+        <td class="desc-cell">UNESCO 世界遺產，建於約 5000 年前。訪客中心了解建造歷史，步行至圍欄邊仰望石陣。提供多語語音導覽（含中文）。</td>
+        <td class="dining-cell">訪客中心咖啡廳，三明治 £6，熱湯 £4</td>
+        <td class="fee-cell">⏰ 09:00，20:00（夏季）<br>💰 含於套票</td>
+        <td class="transport-cell">教練前往，約 1.5 小時車程</td>
+      </tr>
+      <tr>
+        <td class="time-cell">15:30，18:00</td>
+        <td class="name-cell"><a href="https://maps.app.goo.gl/Oxford_RadCam" target="_blank">牛津大學城（Oxford）</a></td>
+        <td class="desc-cell">導遊徒步參觀。必看：① Radcliffe Camera（圓形圖書館，必打卡）；② Christ Church College（哈利波特場景）；③ Bodleian Library；④ Covered Market（紀念品）。</td>
+        <td class="dining-cell">Covered Market 三明治 £5，8</td>
+        <td class="fee-cell">⏰ 約 2 小時自由時間<br>💰 含於套票（部分學院另購 £5，8）</td>
+        <td class="transport-cell">教練前往</td>
+      </tr>
+      <tr><td class="time-cell">19:00，20:00</td><td class="name-cell">教練返回 Victoria，搭地鐵回 Hammersmith</td><td class="desc-cell"></td><td class="dining-cell"></td><td class="fee-cell">💰 地鐵約 £3.5/人</td><td class="transport-cell">Victoria→（District Line）→Hammersmith，約 15 分鐘</td></tr>
+      <tr>
+        <td class="time-cell">20:30，21:30</td>
+        <td class="name-cell meal"><a href="https://maps.app.goo.gl/HopPoles_Ham" target="_blank">【晚餐】Hop Poles Pub，Hammersmith</a></td>
+        <td class="desc-cell">英式傳統酒吧，距飯店步行 5 分鐘，晚間仍可點餐。</td>
+        <td class="dining-cell">Cottage Pie £13，Fish & Chips £14，兒童套餐 £7</td>
+        <td class="fee-cell">⏰ 11:00，23:00<br>💰 人均 £12，18</td>
+        <td class="transport-cell">步行 5 分鐘</td>
+      </tr>
+      <tr><td class="time-cell">22:00</td><td class="name-cell">返回飯店休息</td><td class="desc-cell"></td><td class="dining-cell"></td><td class="fee-cell"></td><td class="transport-cell">步行 5 分鐘</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <div class="notes-section">
+    <h3>📌 注意事項</h3>
+    <ul>
+      <li>一日遊團建議透過 Evan Evans Tours、GetYourGuide 或 Viator 預訂，選擇含門票全包方案（成人約 £89，145）。</li>
+      <li>溫莎古堡週二及週三休館，7月6日（週一）確認開放。</li>
+      <li>洗手間：各景點均有公共廁所。</li>
+      <li>雨天備案：跟團行程不受雨天影響，惟巨石陣戶外部分較濕，請備雨衣。</li>
+    </ul>
+    <h3>🚇 當日交通重點</h3>
+    <div class="transport-note">今日核心交通全由一日遊教練負責。前往 Victoria 搭 District Line（15 分），返回同路線。</div>
+  </div>
+</div>
+
+<div id="day9" class="day-card">
+  <div class="day-header">
+    <div class="day-num">Day 9</div>
+    <h2>7月7日（週二），衛兵交接，倫敦塔，塔橋，柯芬園</h2>
+    <span class="hotel-tag">🏠 Premier Inn London Hammersmith Talgarth Road</span>
+  </div>
+  <div class="day-summary">今日安排倫敦最經典的皇室與歷史路線：早上在白金漢宮外欣賞衛兵交接，下午走訪倫敦塔觀賞皇冠珠寶，再步行至塔橋拍攝最具代表性的地標照片。傍晚前往柯芬園感受街頭表演活力。</div>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>時間</th><th>行程名稱</th><th>簡介與細部規劃</th><th>餐飲推薦</th><th>費用</th><th>交通指南</th></tr></thead>
+    <tbody>
+      <tr><td class="time-cell">09:00</td><td class="name-cell">飯店早餐</td><td class="desc-cell">今日行程步行量大，建議早餐吃飽，備妥水瓶與能量棒。</td><td class="dining-cell">含於房費（兒童免費）</td><td class="fee-cell">⏰ 06:30，10:00<br>💰 含住宿</td><td class="transport-cell">飯店內</td></tr>
+      <tr>
+        <td class="time-cell">10:00，11:30</td>
+        <td class="name-cell"><a href="https://maps.app.goo.gl/BuckinghamPalace" target="_blank">白金漢宮，衛兵交接</a></td>
+        <td class="desc-cell">建議 10:30 前抵達，搶佔鐵欄前觀看位置。衛兵交接夏季週一，三，五，六約 11:00，持續 45 分鐘。結束後在 St. James's Park 散步，賈克橋上可俯瞰全景。</td>
+        <td class="dining-cell"></td>
+        <td class="fee-cell">⏰ 約 11:00，持續 45 分<br>💰 免費</td>
+        <td class="transport-cell">Hammersmith→（District Line）→St. James's Park 站，步行 5 分鐘</td>
+      </tr>
+      <tr>
+        <td class="time-cell">12:00，13:00</td>
+        <td class="name-cell meal"><a href="https://maps.app.goo.gl/StJamesPark" target="_blank">【午餐】St. James's Park 野餐或餐廳</a></td>
+        <td class="desc-cell">公園內 Inn the Park 環境優美，面向湖景。</td>
+        <td class="dining-cell">① Inn the Park（三明治 £9，兒童套餐 £8，湖景座位）<br>② Pret a Manger 外帶野餐（三明治 £5，飲料 £3）</td>
+        <td class="fee-cell">⏰ 09:00，21:00<br>💰 人均 £8，15</td>
+        <td class="transport-cell">步行 5 分鐘（公園內）</td>
+      </tr>
+      <tr>
+        <td class="time-cell">14:00，17:00</td>
+        <td class="name-cell"><a href="https://maps.app.goo.gl/TowerOfLondon" target="_blank">倫敦塔（Tower of London）⭐ 建議提前購票</a></td>
+        <td class="desc-cell">近 1000 年歷史的世界遺產。必看：① Crown Jewels（真實皇冠珠寶）；② White Tower（中世紀盔甲，1066 年建造）；③ Ravens（倫敦塔守護渡鴉）；④ Yeoman Warder 免費衛兵導覽。建議入場後優先前往皇冠珠寶展廳。</td>
+        <td class="dining-cell">塔內 New Armouries Café，三明治 £7，熱巧克力 £3</td>
+        <td class="fee-cell">⏰ 週二至週六 09:00，17:30<br>💰 成人 £34.8，兒童 £17.4，2大2小 £104</td>
+        <td class="transport-cell">從 St. James's Park 搭 Circle/District Line 至 Tower Hill，步行 5 分鐘</td>
+      </tr>
+      <tr>
+        <td class="time-cell">17:30，18:30</td>
+        <td class="name-cell"><a href="https://maps.app.goo.gl/TowerBridge" target="_blank">塔橋（Tower Bridge）散步</a></td>
+        <td class="desc-cell">倫敦最具代表性哥德式開合橋。建議徒步穿越橋面欣賞泰晤士河全景（免費）。必拍：橋北端往南拍攝，橋面倒映泰晤士河黃昏照片。如欲參觀玻璃地板展覽需另購票。</td>
+        <td class="dining-cell"></td>
+        <td class="fee-cell">⏰ 24小時（橋面）<br>💰 過橋免費；展覽成人 £14，兒童 £6.2</td>
+        <td class="transport-cell">從倫敦塔步行 5 分鐘</td>
+      </tr>
+      <tr>
+        <td class="time-cell">19:00，20:30</td>
+        <td class="name-cell meal"><a href="https://maps.app.goo.gl/CoventGarden" target="_blank">【晚餐】柯芬園（Covent Garden）</a></td>
+        <td class="desc-cell">活力四射的廣場，四周圍繞街頭藝人表演，邊用餐邊欣賞表演。</td>
+        <td class="dining-cell">① Dishoom Covent Garden（黑豆咖哩 £10，培根蛋捲 £12，需提前預約）<br>② Maxwell's（漢堡 £16，兒童套餐 £9）</td>
+        <td class="fee-cell">⏰ 18:00，22:30<br>💰 人均 £18，28</td>
+        <td class="transport-cell">從 Tower Bridge 搭地鐵至 Embankment，換乘至 Charing Cross，步行 10 分鐘</td>
+      </tr>
+      <tr><td class="time-cell">21:30</td><td class="name-cell">返回飯店</td><td class="desc-cell"></td><td class="dining-cell"></td><td class="fee-cell"></td><td class="transport-cell">搭 District/Piccadilly Line 至 Hammersmith，約 20 分鐘</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <div class="notes-section">
+    <h3>📌 注意事項</h3>
+    <ul>
+      <li>衛兵交接依皇室行程可能臨時取消，出發前於 changing-guard.com 確認當日是否舉行。</li>
+      <li>倫敦塔皇冠珠寶排隊可能長達 30，60 分鐘，入場後優先前往。</li>
+      <li>Dishoom 非常受歡迎，建議提前 1，2 週官網預約座位。</li>
+      <li>洗手間：倫敦塔、塔橋展覽、柯芬園均設有。</li>
+    </ul>
+    <h3>🚇 當日交通重點</h3>
+    <div class="transport-note">今日跨越倫敦東西區域，Circle/District Line 可貫穿大部分景點。全日地鐵費用約 £8，10/人（有每日上限 £8.50，Zone 1，2）。</div>
+  </div>
+</div>
+
+<div id="day10" class="day-card">
+  <div class="day-header">
+    <div class="day-num">Day 10</div>
+    <h2>7月8日（週三），大英博物館，Bicester Village，返台</h2>
+    <span class="hotel-tag">🏠 Premier Inn London Hammersmith Talgarth Road（退房日）</span>
+  </div>
+  <div class="day-summary">今日為旅程最後一個完整上午，以大英博物館壓軸文化行程。午後可前往 Bicester Village Outlet 購物（選配），或在市區最後採購。傍晚搭乘 Piccadilly Line 直達希斯洛機場，19:50 班機返台。</div>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>時間</th><th>行程名稱</th><th>簡介與細部規劃</th><th>餐飲推薦</th><th>費用</th><th>交通指南</th></tr></thead>
+    <tbody>
+      <tr>
+        <td class="time-cell">08:00，09:00</td>
+        <td class="name-cell">飯店早餐，辦理退房</td>
+        <td class="desc-cell">退房日，行李可寄存於飯店至 14:00，退房後輕裝前往大英博物館。</td>
+        <td class="dining-cell">含於房費</td>
+        <td class="fee-cell">⏰ 06:30，10:00<br>💰 含住宿</td>
+        <td class="transport-cell">步行範圍</td>
+      </tr>
+      <tr>
+        <td class="time-cell">09:30，12:30</td>
+        <td class="name-cell"><a href="https://maps.app.goo.gl/BritishMuseum" target="_blank">大英博物館 ⭐ 需提前預約</a></td>
+        <td class="desc-cell">必看：① Rosetta Stone 羅塞塔石碑（Room 4）；② Egyptian Mummies（Room 62，63，真實木乃伊）；③ Elgin Marbles（Room 18，帕德嫩雕刻）；④ Lewis Chess Set（Room 40，哈利波特靈感來源）。</td>
+        <td class="dining-cell">館內 Great Court Restaurant，三明治 £8，下午茶 £12</td>
+        <td class="fee-cell">⏰ 每日 10:00，17:00（週五至 20:30）<br>💰 完全免費（需預約）</td>
+        <td class="transport-cell">Hammersmith→（District Line）→Embankment，換 Northern Line→Tottenham Court Road，步行 5 分鐘</td>
+      </tr>
+      <tr>
+        <td class="time-cell">12:30，13:30</td>
+        <td class="name-cell meal"><a href="https://maps.app.goo.gl/MuseumStreet_London" target="_blank">【午餐】Bloomsbury 區餐廳</a></td>
+        <td class="desc-cell">大英博物館附近 Museum Street 一帶餐廳密集。</td>
+        <td class="dining-cell">① Côte Brasserie（法式，沙朗牛排 £18，兒童套餐 £8）<br>② Museum Tavern（英式酒吧，Fish & Chips £14）</td>
+        <td class="fee-cell">⏰ 12:00，22:00<br>💰 人均 £15，22</td>
+        <td class="transport-cell">步行 3，5 分鐘</td>
+      </tr>
+      <tr>
+        <td class="time-cell">14:00，15:30</td>
+        <td class="name-cell"><a href="https://maps.app.goo.gl/BicesterVillage" target="_blank">【選配】Bicester Village Outlet 購物</a></td>
+        <td class="desc-cell">160+ 頂級品牌，折扣 30，70%。建議購物時間 1.5 小時（需預留趕機時間）。若放棄 Outlet，可改在 Oxford Street 附近 Selfridges 購物（更省時）。</td>
+        <td class="dining-cell">Bicester Village 內咖啡廳，下午茶拼盤 £12</td>
+        <td class="fee-cell">⏰ 週一至週五 09:00，20:00<br>💰 火車來回 £15/人；購物依個人</td>
+        <td class="transport-cell">Marylebone→（Chiltern Railways）→Bicester Village，約 45 分鐘</td>
+      </tr>
+      <tr>
+        <td class="time-cell">15:30，16:00</td>
+        <td class="name-cell">返回 Hammersmith 飯店取行李</td>
+        <td class="desc-cell">確認所有行李取齊，確認護照、機票、轉機資訊。</td>
+        <td class="dining-cell"></td>
+        <td class="fee-cell"></td>
+        <td class="transport-cell">搭地鐵返回 Hammersmith 取行李</td>
+      </tr>
+      <tr>
+        <td class="time-cell">16:15，17:00</td>
+        <td class="name-cell"><a href="https://maps.app.goo.gl/HeathrowT3" target="_blank">搭 Piccadilly Line 前往希斯洛機場 T3</a></td>
+        <td class="desc-cell">Hammersmith 站（Piccadilly Line 月台）直達希斯洛 Terminal 3，全程約 35，40 分鐘，無需換車。建議 17:00，17:30 抵達機場。</td>
+        <td class="dining-cell">機場 Wagamama（拉麵 £14），Pret a Manger（三明治 £6，8）</td>
+        <td class="fee-cell">⏰ 每 5，10 分鐘一班<br>💰 £6/人（含希斯洛附加費）</td>
+        <td class="transport-cell">Hammersmith（Piccadilly Line）→Heathrow T3，約 35，40 分鐘，直達</td>
+      </tr>
+      <tr>
+        <td class="time-cell">17:00，19:50</td>
+        <td class="name-cell"><a href="https://maps.app.goo.gl/HeathrowT3" target="_blank">希斯洛機場 T3，辦理登機，起飛返台</a></td>
+        <td class="desc-cell">完成報到、行李托運、安全檢查與出境。T3 免稅商店推薦：Whittard 茶葉、Fortnum & Mason 果醬、M&S 餅乾。班機 19:50 起飛。</td>
+        <td class="dining-cell">機場各餐廳均有，建議提早用餐以避免登機前匆忙</td>
+        <td class="fee-cell">⏰ 報到截止約 18:50<br>💰 免稅購物依個人</td>
+        <td class="transport-cell">機場內</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+  <div class="notes-section">
+    <h3>📌 注意事項</h3>
+    <ul>
+      <li>大英博物館旺季排隊嚴重，強烈建議提前於 britishmuseum.org 預約免費入場票。</li>
+      <li>若前往 Bicester Village，最晚 16:00 需開始往機場方向移動。</li>
+      <li>英國海關：肉製品、乳製品請勿攜帶入境台灣。</li>
+      <li>今日最關鍵交通：Hammersmith Piccadilly Line 直達希斯洛 T3（35，40 分，無需換車）。最晚 16:30 從飯店出發。</li>
+    </ul>
+    <h3>🚇 當日交通重點</h3>
+    <div class="transport-note">今日最關鍵：Hammersmith Piccadilly Line → Heathrow T3（35 分，直達）。班機 19:50，最晚 16:30 需出發。</div>
+  </div>
+</div>
+
+<!-- ADVANCE BOOKING -->
+<div id="advance" class="advance-section">
+  <h2>⭐ 最需要提前預約的 3 個項目</h2>
+
+  <div class="advance-item">
+    <div class="advance-rank">
+      <span class="num">1</span>
+      <span class="item-name">自然歷史博物館免費入場票（Natural History Museum）</span>
+    </div>
+    <div class="advance-detail">
+      <p><span class="label">原因：</span>7月暑假旺季每日名額有限，旺季常常提前 2，3 週全數預約完畢，無預約者可能在門口等待 1，2 小時甚至入場被拒。</p>
+      <p><span class="label">預約方式：</span>前往 <a href="https://www.nhm.ac.uk/visit/getting-here.html" target="_blank">nhm.ac.uk</a>，點選 Plan Your Visit，選擇 Book Free Tickets，挑選入場時段（建議選 10:00 最早場次）。</p>
+      <div class="timing">⏰ 建議出發前 4，6 週預約</div>
+    </div>
+  </div>
+
+  <div class="advance-item">
+    <div class="advance-rank">
+      <span class="num">2</span>
+      <span class="item-name">Chester Zoo 門票</span>
+    </div>
+    <div class="advance-detail">
+      <p><span class="label">原因：</span>英國最大動物園之一，7月假日一票難求，現場購票可能比網路票貴 10，20%，且旺季可能售罄。</p>
+      <p><span class="label">預約方式：</span>前往 <a href="https://www.chesterzoo.org" target="_blank">chesterzoo.org</a>，選擇日期購票，記得勾選「Gift Aid」捐獻選項，門票費用自動涵蓋捐款，讓動物園獲得稅務補助。</p>
+      <div class="timing">⏰ 建議出發前 4，8 週預約</div>
+    </div>
+  </div>
+
+  <div class="advance-item">
+    <div class="advance-rank">
+      <span class="num">3</span>
+      <span class="item-name">溫莎，巨石陣，牛津一日遊套票</span>
+    </div>
+    <div class="advance-detail">
+      <p><span class="label">原因：</span>7月暑假倫敦觀光團名額極搶手，好的一日遊方案（含門票、導遊、冷氣教練）常在出發前 6，8 週售罄。</p>
+      <p><span class="label">預約方式：</span>前往 <a href="https://www.getyourguide.com" target="_blank">GetYourGuide</a> 或 <a href="https://www.viator.com" target="_blank">Viator</a>，搜尋「Windsor Stonehenge Oxford day trip from London」，選含門票全包方案（Family Ticket 有折扣），確認 7 月 6 日（週一）場次。</p>
+      <div class="timing">⏰ 建議出發前 6，8 週預約</div>
+    </div>
+  </div>
+</div>
+
+</div><!-- end container -->
+
+<footer>
+  <p>2026 曼徹斯特‧倫敦親子學術旅遊計畫 ｜ 專業旅遊顧問規劃</p>
+  <p style="margin-top:6px;">出遊日期：2026年6月28日，7月9日 ｜ 2大人 + 2學齡兒童</p>
+</footer>
+
+</body>
+</html>
